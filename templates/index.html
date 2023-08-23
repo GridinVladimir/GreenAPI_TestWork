@@ -19,6 +19,11 @@
             <input type="text" id="chatId" name="chatId" placeholder="chatId" required>
             <textarea id="message" name="message" placeholder="Напишите сообщение..."></textarea>
             <button type="button" onclick="sendUserMessage()">sendMessage</button>
+            <br/>
+
+            <input type="text" id="chatId2" name="chatId2" placeholder="chatId" required>
+            <input type="text" id="urlFile" name="urlFile" placeholder="urlFile" required>
+            <button type="button" onclick="sendFileByUrl()">sendFileByUrl</button>
 
         </form>
     </div>
@@ -54,6 +59,18 @@
 
         function fetchStateInstance() {
             $.post('/getStateInstance', $('#apiForm').serialize(), function(data) {
+                if (data.error) {
+                    $('#resultArea').val(data.error);
+                } else {
+                    let parsedData = JSON.parse(data.response);
+                    let formattedData = JSON.stringify(parsedData, null, 4);
+                    $('#resultArea').val(formattedData);
+                }
+            });
+        }
+
+        function sendFileByUrl() {
+            $.post('/sendFileByUrl', $('#apiForm').serialize(), function(data) {
                 if (data.error) {
                     $('#resultArea').val(data.error);
                 } else {
