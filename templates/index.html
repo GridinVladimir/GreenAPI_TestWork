@@ -11,10 +11,15 @@
     <div id="leftPart">
         <form id="apiForm">
             <input type="text" id="idInstance" name="idInstance" placeholder="idInstance" required>
-            <input type="text" id="apiTokenInstance" name="apiTokenInstance" placeholder="apiTokenInstance" required>
-            
+            <input type="text" id="apiTokenInstance" name="apiTokenInstance" placeholder="apiTokenInstance" required>   
             <button type="button" onclick="fetchSettings()">getSettings</button>
             <button type="button" onclick="fetchStateInstance()">getStateInstance</button>
+            <br/>
+
+            <input type="text" id="chatId" name="chatId" placeholder="chatId" required>
+            <textarea id="message" name="message" placeholder="Напишите сообщение..."></textarea>
+            <button type="button" onclick="sendUserMessage()">sendMessage</button>
+
         </form>
     </div>
     
@@ -24,6 +29,17 @@
     </div>
 
     <script>
+        function sendUserMessage() {
+            $.post('/sendMessage', $('#apiForm').serialize(), function(data) {
+                if (data.error) {
+                    $('#resultArea').val(data.error);
+                } else {
+                    let parsedData = JSON.parse(data.response);
+                    let formattedData = JSON.stringify(parsedData, null, 4);
+                    $('#resultArea').val(formattedData);
+                }
+            });
+        }
         function fetchSettings() {
             $.post('/getSettings', $('#apiForm').serialize(), function(data) {
                 if (data.error) {

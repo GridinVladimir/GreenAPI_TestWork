@@ -33,5 +33,26 @@ def getStateInstance():
     else:
         return jsonify({"response": response.text})
 
+
+@app.route('/sendMessage', methods=['POST'])
+def sendMessage():
+    idInstance = request.form['idInstance']
+    apiTokenInstance = request.form['apiTokenInstance']
+    chatId = request.form['chatId']
+    message = request.form['message']
+    
+    url = f"https://api.green-api.com/waInstance{idInstance}/sendMessage/{apiTokenInstance}"
+    payload = {
+        "chatId": chatId,
+        "message": message
+    }
+    headers = {'Content-Type': 'application/json'}
+    response = requests.post(url, headers=headers, json=payload)
+    
+    if response.status_code != 200:
+        return jsonify({"error": "Ошибка: неверный idInstance или apiTokenInstance."})
+    else:
+        return jsonify({"response": response.text})
+    
 if __name__ == '__main__':
     app.run(debug=True)
